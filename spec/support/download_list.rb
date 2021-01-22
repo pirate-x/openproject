@@ -12,15 +12,21 @@ class DownloadList
 
   def refresh_from(page)
     @latest = nil
-    page.visit("about:downloads")
-    # give some time for page to load
-    sleep 0.5
-    download_name = page.evaluate_script("document.querySelector('downloads-manager').shadowRoot.querySelector('#downloadsList downloads-item').shadowRoot.querySelector('div#content #file-link')").text()
-    if download_name && !@history.include?(download_name)
-      Timeout.timeout(Capybara.default_max_wait_time) do
-        sleep 0.1 until SHARED_PATH.join(download_name).exist?
+    if false
+      page.visit("about:downloads")
+      # give some time for page to load
+      sleep 0.5
+      download_name = page.evaluate_script("document.querySelector('downloads-manager').shadowRoot.querySelector('#downloadsList downloads-item').shadowRoot.querySelector('div#content #file-link')").text()
+      if download_name && !@history.include?(download_name)
+        Timeout.timeout(Capybara.default_max_wait_time) do
+          sleep 0.1 until SHARED_PATH.join(download_name).exist?
+        end
+        @latest = download_name
+        @history << @latest
       end
-      @latest = download_name
+    else
+      sleep 0.5
+      @latest = Dir.glob(SHARED_PATH.join("*").to_s).max_by {|f| File.mtime(f) }
       @history << @latest
     end
     self
@@ -37,7 +43,6 @@ class DownloadList
   end
 
   def self.clear
-    return if ENV["CI"]
     Dir[SHARED_PATH.join("*")].each do |file|
       FileUtils.rm_f(file)
     end

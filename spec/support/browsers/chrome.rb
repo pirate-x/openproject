@@ -46,6 +46,8 @@ def register_chrome(language, name: :"chrome_#{language}")
     client.read_timeout = 180
     client.open_timeout = 180
 
+    service = ::Selenium::WebDriver::Service.chrome(args: { verbose: true, log_path: '/tmp/chromedriver.log' })
+
     driver = Capybara::Selenium::Driver.new(
       app,
       # browser: ENV['SELENIUM_GRID_URL'] ? :remote : :chrome,
@@ -53,7 +55,8 @@ def register_chrome(language, name: :"chrome_#{language}")
       url: ENV['SELENIUM_GRID_URL'],
       desired_capabilities: capabilities,
       http_client: client,
-      options: options
+      options: options,
+      service: service
     )
 
     if !ENV['SELENIUM_GRID_URL']
