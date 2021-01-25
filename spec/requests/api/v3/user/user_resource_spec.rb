@@ -118,7 +118,7 @@ describe 'API v3 User resource',
 
         it 'contains no more users' do
           expect(subject.body)
-            .to be_json_eql(1.to_json)
+            .to be_json_eql./spec/lib/api/v3/users/user_representer_spec.rb:203(1.to_json)
             .at_path('total')
         end
       end
