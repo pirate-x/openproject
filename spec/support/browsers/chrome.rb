@@ -28,6 +28,9 @@ def register_chrome(language, name: :"chrome_#{language}")
     options.add_argument('disable-gpu')
     options.add_argument('disable-popup-blocking')
     options.add_argument("lang=#{language}")
+    # This is REQUIRED for running in a docker container
+    # https://github.com/grosser/parallel_tests/issues/658
+    options.add_argument('disable-dev-shm-usage')
 
     options.add_preference(:download,
                            directory_upgrade: true,

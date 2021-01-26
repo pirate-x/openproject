@@ -10,7 +10,7 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt buster-pgdg main" > /etc/a
 
 RUN apt-get update -qq && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    postgresql-9.6 postgresql-client-9.6 time pandoc default-jre-headless
+    postgresql-9.6 postgresql-client-9.6 time pandoc default-jre-headless firefox-esr
 
 ENV CI=true
 ENV RAILS_ENV=test
@@ -34,6 +34,7 @@ VOLUME [ "/usr/local/bundle", "/home/$USER/openproject", "/home/$USER/openprojec
 WORKDIR /home/$USER/openproject
 
 ENTRYPOINT [ "/usr/sbin/entrypoint.sh" ]
+CMD ["setup-tests", "bash"]
 
 # ruby servers
 EXPOSE 3000-3016

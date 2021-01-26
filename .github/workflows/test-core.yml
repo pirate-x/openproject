@@ -22,11 +22,11 @@ jobs:
         LOCAL_DEV_CHECK: 1
       run: |
         cp .env.example .env
-        docker-compose build ci
-        docker-compose run ci setup run-units
+        docker-compose -f docker-compose.ci.yml build ci
+        docker-compose -f docker-compose.ci.yml run ci setup-tests run-units
     - name: cleanup
       if: ${{ always() }}
-      run: docker-compose down --remove-orphans -t 10
+      run: docker-compose -f docker-compose.ci.yml down --remove-orphans -t 10
   features:
     needs: units
     name: Features
@@ -42,16 +42,15 @@ jobs:
         key: ${{ runner.os }}-tests
     - name: test
       env:
-        CI_JOBS: 12
+        CI_JOBS: 16
         CI_CACHE_PATH: "/tmp/${{ github.sha }}/"
         LOCAL_DEV_CHECK: 1
         # set to 0 for no retry at all. Useful to see how many flickering tests
         CI_RETRY_COUNT: 3
       run: |
         cp .env.example .env
-        docker-compose build ci
-        docker-compose up -d --scale chrome=$CI_JOBS selenium-hub
-        docker-compose run ci setup run-features
+        docker-compose -f docker-compose.ci.yml build ci
+        docker-compose -f docker-compose.ci.yml run ci setup-tests run-features
     - name: cleanup
       if: ${{ always() }}
-      run: docker-compose down --remove-orphans -t 10
+      run: docker-compose -f docker-compose.ci.yml down --remove-orphans -t 10
