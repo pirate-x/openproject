@@ -63,7 +63,6 @@ if [ "$1" == "setup-tests" ]; then
 	done
 
 	execute "time bundle install -j$JOBS"
-	execute "TEST_ENV_NUMBER=0 time bash ./script/ci/cache_prepare.sh"
 	execute "time bundle exec rake parallel:setup"
 fi
 
@@ -74,6 +73,9 @@ fi
 
 if [ "$1" == "run-features" ]; then
 	shift
+	execute "cd frontend; npm install ; cd -"
+	execute "bundle exec rake assets:precompile assets:clean"
+	execute "cp -rp config/frontend_assets.manifest.json public/assets/frontend_assets.manifest.json"
 	execute "time bundle exec rake parallel:features"
 fi
 
