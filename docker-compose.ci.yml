@@ -4,7 +4,7 @@ networks:
   testing:
 
 services:
-  ci-standalone:
+  ci:
     build:
       context: ./docker/ci/
       dockerfile: Dockerfile
