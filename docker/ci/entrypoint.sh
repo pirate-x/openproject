@@ -63,7 +63,7 @@ if [ "$1" == "setup-tests" ]; then
 	done
 
 	execute "time bundle install -j$JOBS"
-	execute "time bundle exec rake db:create db:migrate webdrivers:chromedriver:update webdrivers:geckodriver:update"
+	execute "TEST_ENV_NUMBER=0 time bundle exec rake db:create db:migrate webdrivers:chromedriver:update webdrivers:geckodriver:update"
 	execute "time bundle exec rake parallel:setup"
 fi
 
@@ -81,5 +81,5 @@ if [ "$1" == "run-features" ]; then
 fi
 
 if [ ! -z "$1" ] ; then
-	execute "$@"
+	exec "$@"
 fi
